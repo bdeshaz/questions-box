@@ -5,10 +5,20 @@
 Models:
 
 * Users
+ - Many-to-Many relationship with Questions + Answers by upvotes (declared in Q/A)
+ - One-to-Many relationship with Questions + Answers by authorship (declared in Q/A)
 * Questions
+ - Many-to-Many relationship with Tags
 * Answers
+ - One-to-Many relationship with Questions
 * Comments
+ - Many-to-One relationship with Questions + Answers (declared in Q/A)
 * Tags
+
+Because of the large number of similarities between Questions and Answers,
+it may make sense to use an abstract base class.
+
+https://docs.djangoproject.com/en/1.8/topics/db/models/#abstract-base-classes
 
 ## Site Structure
 
@@ -36,7 +46,7 @@ User list (optional)
 ### View names
 
  - questions
- - show_question
+ - show_question (requires primary key)
  - ask_question
 
 ## Git
