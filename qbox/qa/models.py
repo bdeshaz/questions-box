@@ -10,12 +10,12 @@ import pytz
 class Question(models.Model):
 	title = models.CharField(max_length=255)
 	text = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True)
+	posted_at = models.DateTimeField(auto_now=True)
 
 
 class Answers(models.Model):
 	text = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True)
+	posted_at = models.DateTimeField(auto_now=True)
 
 
 class Comment(models.Model):
