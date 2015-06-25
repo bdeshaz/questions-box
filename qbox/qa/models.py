@@ -12,6 +12,7 @@ class Question(models.Model):
     text = models.TextField()
     posted_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
+    upvoter = models.ManyToManyField(User, unique=True)
 
 
 
