@@ -10,6 +10,29 @@ Models:
 * Comments
 * Tags
 
+## Site Structure
+
+Base Navigation (not a page, top nav)
+ - Link to ask a question link
+ - Link to Top users (optional)
+ - Link to see questions
+
+Questions list
+ - Landing page
+ - Paginated list
+
+Ask a Question
+ - Question form
+
+Question Detail
+ - Lists answers
+  - pagination by 25 or 30
+ - Ability to leave an answer (form)
+ - Ability to Upvote or downvote
+
+User list (optional)
+ - list users by reputation
+
 ## Requirements to Satisfy
 
 Logged-in users should be able to:

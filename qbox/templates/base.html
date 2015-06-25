@@ -1,0 +1,56 @@
+{% load staticfiles %}
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <link rel="stylesheet" href="{% static 'style.css' %}"/>
+  <style>
+    .jumbotron {
+        background: url('{% static "bkg.jpg" %}');
+        height:350px;
+        color: #FFF;
+        text-shadow: black 0.3em 0.3em 0.3em;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>URLy bird</title>
+</head>
+<body>
+
+<div class="container">
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-left">
+        <li><h3 class="text-muted">URLy Bird</h3></li>
+      </ul>
+      <ul class="nav nav-pills pull-right">
+          <li role="presentation" class="active"><a href="{% url 'view_index' %}">Index</a></li>
+        {% if request.user.is_authenticated %}
+          <li role="presentation"><a href="{% url 'bookmarker' request.user.id %}">User: {{ request.user.username }}</a></li>
+          <li role="presentation"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li role="presentation"><a href="{% url 'view_logout' %}">log out</a></li>
+        {% else %}
+          <li role="presentation"><a href="{% url 'view_login' %}">Log in</a></li>
+          <li role="presentation"><a href="{% url 'view_register' %}">Create an account</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+{% bootstrap_messages %}
+{% block content %}
+{% endblock %}
+
+<footer class="footer">
+  <p>&copy; Just kidding, no copyrights, 2015</p>
+</footer>
+
+</div>
+
+</body>
+</html>
