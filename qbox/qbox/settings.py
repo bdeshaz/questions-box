@@ -25,7 +25,7 @@ SECRET_KEY = '&u^rro_=$b#l6ea9_pav8$0$8^qsd@f3u9522!uggnx6xmcpyr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap3',
+    'qa',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -74,12 +76,22 @@ WSGI_APPLICATION = 'qbox.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if os.environ.get('DATABASE_URL', None): # if deployed on Heroku
+    print("you should be on heroku!!!")
+    import dj_database_url
+    DATABASES = {}
+    DATABASES['default'] = dj_database_url.config()
+else: # locally hosting
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'qbox',
+            'USER': 'admin',
+            'HOST': '127.0.0.1'
+        }
     }
-}
+
 
 
 # Internationalization
@@ -87,7 +99,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -100,3 +112,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Bootstrap
+
+BOOTSTRAP3 = {
+
+    # The URL to the jQuery JavaScript file
+    'jquery_url': '/static/jquery-2.1.4.min.js',
+
+    # The Bootstrap base URL
+    'base_url': '/static/bootstrap/',
+
+    # The complete URL to the Bootstrap CSS file (None means no theme)
+#    'theme_url': '/static/bootstrap/css/sandstone.css',
+    'theme_url': '/static/bootstrap/css/bootstrap-theme.min.css',
+
+    # Include jQuery with Bootstrap JavaScript (affects django-bootstrap3 template tags)
+    'include_jquery': True,
+}

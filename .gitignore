@@ -68,3 +68,5 @@ docs/_build/
 target/
 
 .direnv/
+migrations/
+.DS_Store
