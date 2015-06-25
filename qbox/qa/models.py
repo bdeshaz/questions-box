@@ -7,35 +7,42 @@ import pytz
 
 # Create your models here.
 
-class Question(models.Model):
+class GenericEntry(models.Model): # parent class for Q & A
+    text = models.TextField()
+    posted_at = models.DateTimeField(auto_now=True)
+    score = models.IntegerField(default=0)
+    # relationships
+    owner = models.ForeignKey(User)
+    voter = models.ManyToManyField(User, unique=True)
+
+    class Meta:
+        abstract = True
+
+
+class Question(GenericEntry):
     title = models.CharField(max_length=255)
-    text = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
-    upvoter = models.ManyToManyField(User, unique=True)
+    tag = models.ManyToManyField(Tag, unique=True)
 
 
-
-class Answers(models.Model):
-    text = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
+class Answers(GenericEntry):
     question = models.ForeignKey(Question)
 
 
-class Comment(models.Model):
+class Comment(GenericEntry):
     text = models.TextField(max_length=255)
-    user = models.ForeignKey(User)
-    question = models.ForeignKey(Question)
-    answer = models.ForeignKey(Answers)
+    owner = models.ForeignKey(User)
+    # can be on answer OR question
+    on_answer = models.BooleanField(default=True)
+    parent_answer = models.ForeignKey(Answer)
+    parent_question = models.ForeignKey(Question)
 
 
-class Tags(models.Model):
+class Tag(models.Model):
     text = models.CharField(max_length=255)
 
 
-class Score(models.Model):
-    score = models.IntegerField()
-    question = models.ForeignKey(Question)
-    answer = models.ForeignKey(Answers)
-    user = models.ForeignKey(User)
+# class Score(models.Model):
+#     score = models.IntegerField()
+#     question = models.ForeignKey(Question)
+#     answer = models.ForeignKey(Answers)
+#     user = models.ForeignKey(User)
