@@ -70,3 +70,4 @@ target/
 .direnv/
 migrations/
 .DS_Store
+.idea
