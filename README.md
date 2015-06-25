@@ -33,6 +33,24 @@ Question Detail
 User list (optional)
  - list users by reputation
 
+### View names
+
+ - questions
+ - show_question
+ - ask_question
+
+## Git
+
+in terminal
+
+$ git checkout -b {branch_name}
+  ...do work...
+$ git push origin {branch_name}
+  ...in github...
+  merge
+  or $ git merge
+$ git pull origin master
+
 ## Requirements to Satisfy
 
 Logged-in users should be able to:

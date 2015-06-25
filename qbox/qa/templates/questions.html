@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>Question List</h2>
+    <p class="lead">Questions entered by users of the site</p>
+</div>
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Score</th>
+			<th>Answers</th>
+			<th>Question</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for qu in questions %}
+		<tr>
+			<td>{{ qu.score }}</td>
+			<td>{{ qu.answer_count }}</td>
+			<td><a href="{% url 'show_question' qu.id %}">
+				{{ qu.title }}</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+
+
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}
