@@ -1,0 +1,38 @@
+# Alan and Brian Question Box
+
+## Model construction
+
+Models:
+
+* Users
+* Questions
+* Answers
+* Comments
+* Tags
+
+## Requirements to Satisfy
+
+Logged-in users should be able to:
+
+    Ask questions
+    Answer questions
+    Vote on answers positively or negatively
+
+Questions should have:
+
+    a title
+    question text
+    any number of tags (tags being short phrases that show the topics of the question)
+    any number of answers
+
+Answers should have:
+
+    the answer text
+    a score based on the sum of all votes
+
+Besides the normal things users have, they should also have a score. The score starts at 0, and increases in the following ways:
+
+    When a user asks a question, +5 points.
+    When a user's answer is upvoted, +10 points per positive vote.
+    When a user's answer is downvoted, -5 points per negative vote.
+    When a user downvotes an answer, -1 point (yes, it costs from your score to vote something down).
