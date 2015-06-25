@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>Question List</h2>
+    <p class="lead">Questions entered by users of the site</p>
+</div>
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Score</th>
+			<th>Answer</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for ans in answers %}
+		<tr>
+			<td>{{ ans.score }}</td>
+			<td>{{ ans.text }} <br />
+                {{ ans.user.username }}
+            </td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+
+
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

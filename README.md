@@ -43,13 +43,13 @@ User list (optional)
 
 in terminal
 
-$ git checkout -b {branch_name}
-  ...do work...
-$ git push origin {branch_name}
-  ...in github...
-  merge
-  or $ git merge
-$ git pull origin master
+    $ git checkout -b {branch_name}
+    ...do work...
+    $ git push origin {branch_name}
+    ...in github...
+    merge
+    or $ git merge
+    $ git pull origin master
 
 ## Requirements to Satisfy
 
