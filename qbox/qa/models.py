@@ -31,6 +31,7 @@ class Question(GenericEntry):
     tag = models.ManyToManyField(Tag)
     voter = models.ManyToManyField(User, related_name="voted_question")
     comments = models.ManyToManyField(Comment)
+    # commentors = models.ManyToManyField(User, through='Comment')
 
 
 class Answer(GenericEntry):

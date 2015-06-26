@@ -24,3 +24,14 @@ class QuestionDetailView(django_views.ListView):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         context['question'] = self.question
         return context
+
+class AskQuestionView(django_views.edit.CreateView): #or FormView
+    model = Question
+    template_name = "ask.html"
+    fields = ["title", "text"]
+
+    def form_valid(self, form):
+        question = form.save()
+        question.owner = request.user
+        question.save()
+        return super(AskQuestionView, self).form_valid(form)

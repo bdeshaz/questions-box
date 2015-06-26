@@ -27,20 +27,19 @@
     <nav>
       <ul class="nav nav-pills pull-left">
         <li><h3 class="text-muted">URLy Bird</h3></li>
+        <li role="presentation" class="active"><a href="{% url 'view_questions' %}">Questions</a></li>
+        <li role="presentation" class="active"><a href="{% url 'ask_question' %}">Ask</a></li>
       </ul>
       <ul class="nav nav-pills pull-right">
-          <li role="presentation" class="active"><a href="{% url 'view_questions' %}">Questions</a></li>
-          <li role="presentation" class="active"><a href="{% url 'ask_question' %}">Ask</a></li> 
-{% comment %}
-        <!-- {% if request.user.is_authenticated %}
-          <li role="presentation"><a href="{% url 'bookmarker' request.user.id %}">User: {{ request.user.username }}</a></li>
-          <li role="presentation"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-          <li role="presentation"><a href="{% url 'view_logout' %}">log out</a></li>
+
+        {% if request.user.is_authenticated %}
+          <li role="presentation"><a href="{% url 'view_user' request.user.id %}">User: {{ request.user.username }}</a></li>
+          <li role="presentation"><a href="{% url 'logout' %}">log out</a></li>
         {% else %}
-{#          <li role="presentation"><a href="{% url 'view_login' %}">Log in</a></li> #}
-{#          <li role="presentation"><a href="{% url 'view_register' %}">Create an account</a></li> #}
-        {% endif %} -->
-        {% endcomment %}
+         <li role="presentation"><a href="{% url 'login' %}">Log in</a></li>
+         <li role="presentation"><a href="{% url 'register' %}">Create an account</a></li>
+        {% endif %}
+
       </ul>
     </nav>
   </div>
