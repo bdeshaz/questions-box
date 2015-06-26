@@ -36,11 +36,12 @@ class QuestionDetailView(django_views.ListView):
 class AskQuestionView(django_views.edit.CreateView): #or FormView
     model = Question
     template_name = "ask.html"
-    fields = ["title", "text"]
+    fields = ["title", "text", "score"]
     # success_url = 'http://www.google.com'
 
     def form_valid(self, form):
-        question = form.save()
-        question.owner = request.user
-        question.save()
+        question = form.save(commit=False)
+        question.score = 0
+        question.owner = self.request.user
         return super(AskQuestionView, self).form_valid(form)
+        question.save()

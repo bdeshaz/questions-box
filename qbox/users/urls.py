@@ -17,6 +17,7 @@ urlpatterns = [
                             success_url = "http://www.google.com"),
                             name='register'),
     url(r'^login/', auth_views.login, name='login'),
+    url(r'^logout/', auth_views.logout, name='logout'),
     url(r'^users/$', ListView.as_view(model=User,
                             template_name='user_list.html',
                             context_object_name='users',

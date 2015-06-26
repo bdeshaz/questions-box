@@ -14,7 +14,7 @@ class Tag(models.Model):
 class GenericEntry(models.Model): # parent class for Q & A
     text = models.TextField()
     posted_at = models.DateTimeField(auto_now=True)
-    score = models.IntegerField(default=0)
+    score = models.IntegerField(default=0, null=True)
     # relationships
     owner = models.ForeignKey(User)
 
