@@ -45,3 +45,4 @@ class AskQuestionView(django_views.edit.CreateView): #or FormView
         question.owner = self.request.user
         return super(AskQuestionView, self).form_valid(form)
         question.save()
+

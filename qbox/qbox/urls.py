@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin, auth
+from django.views.generic import ListView
+from qa.models import Question
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    # url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'accounts/profile', ListView.as_view(
+        model=Question,
+        template_name="questions.html",
+        context_object_name='questions',
+        paginate_by=30,
+    )),
     url(r'^', include('qa.urls')),
     url(r'^', include('users.urls')),
-]
+]  # url(r'^accounts/', include('django.contrib.auth.urls')),
