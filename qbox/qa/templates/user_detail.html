@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>{{ user.username }}</h1>
+    <p class="lead">User of this site</p>
+</div>
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<p>Stats on user:
+    <ul>
+        <li>Score: {{ user.score }}</li>
+    </ul>
+</p>
+
+
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}
