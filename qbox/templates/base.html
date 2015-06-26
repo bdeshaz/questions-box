@@ -18,7 +18,7 @@
     }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>URLy bird</title>
+    <title>Question Website</title>
 </head>
 <body>
 
@@ -29,15 +29,16 @@
         <li><h3 class="text-muted">URLy Bird</h3></li>
       </ul>
       <ul class="nav nav-pills pull-right">
-          <li role="presentation" class="active"><a href="{% url 'view_index' %}">Index</a></li>
-        {% if request.user.is_authenticated %}
+          <li role="presentation" class="active"><a href="{% url 'view_questions' %}">Questions</a></li>
+          <li role="presentation" class="active"><a href="{% url 'ask_question' %}">Ask</a></li>
+        <!-- {% if request.user.is_authenticated %}
           <li role="presentation"><a href="{% url 'bookmarker' request.user.id %}">User: {{ request.user.username }}</a></li>
           <li role="presentation"><a href="{% url 'dashboard' %}">Dashboard</a></li>
           <li role="presentation"><a href="{% url 'view_logout' %}">log out</a></li>
         {% else %}
           <li role="presentation"><a href="{% url 'view_login' %}">Log in</a></li>
           <li role="presentation"><a href="{% url 'view_register' %}">Create an account</a></li>
-        {% endif %}
+        {% endif %} -->
       </ul>
     </nav>
   </div>

@@ -11,7 +11,7 @@ class QuestionDetailView(django_views.ListView):
     model = Answer
     context_object_name='answers'
     paginate_by=30
-    self.question = None
+    question = None
 
     def dispatch(self, *args, **kwargs):
         self.question = Question.objects.get(pk=self.kwargs['pk'])

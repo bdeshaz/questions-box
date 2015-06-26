@@ -17,8 +17,6 @@ class GenericEntry(models.Model): # parent class for Q & A
     score = models.IntegerField(default=0)
     # relationships
     owner = models.ForeignKey(User)
-    # vote = models.OneToManyField(Vote)
-    # voter = models.ManyToManyField(User)
 
     class Meta:
         abstract = True
@@ -27,21 +25,20 @@ class GenericEntry(models.Model): # parent class for Q & A
 class Question(GenericEntry):
     title = models.CharField(max_length=255)
     tag = models.ManyToManyField(Tag)
+    voter = models.ManyToManyField(User, related_name="voted_question")
 
 
 class Answer(GenericEntry):
     parent_question = models.ForeignKey(Question)
+    voter = models.ManyToManyField(User, related_name="voted_answer")
 
 
 class Comment(GenericEntry):
     # can be on answer OR question
     on_answer = models.BooleanField(default=True)
-    parent_answer = models.ForeignKey(Answer)
-    parent_question = models.ForeignKey(Question)
-
-
-class QuestionVote(models.Model):
-    question = models.ForeignKey(Question)
+    parent_answer = models.ForeignKey(Answer, null=True)
+    parent_question = models.ForeignKey(Question, null=True)
+    voter = models.ManyToManyField(User, related_name="voted_comment")
 
 
 
