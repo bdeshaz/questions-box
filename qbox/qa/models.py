@@ -7,13 +7,18 @@ import pytz
 
 # Create your models here.
 
+class Tag(models.Model):
+    text = models.CharField(max_length=255)
+
+
 class GenericEntry(models.Model): # parent class for Q & A
     text = models.TextField()
     posted_at = models.DateTimeField(auto_now=True)
     score = models.IntegerField(default=0)
     # relationships
     owner = models.ForeignKey(User)
-    voter = models.ManyToManyField(User, unique=True)
+    # vote = models.OneToManyField(Vote)
+    # voter = models.ManyToManyField(User)
 
     class Meta:
         abstract = True
@@ -21,24 +26,23 @@ class GenericEntry(models.Model): # parent class for Q & A
 
 class Question(GenericEntry):
     title = models.CharField(max_length=255)
-    tag = models.ManyToManyField(Tag, unique=True)
+    tag = models.ManyToManyField(Tag)
 
 
-class Answers(GenericEntry):
-    question = models.ForeignKey(Question)
+class Answer(GenericEntry):
+    parent_question = models.ForeignKey(Question)
 
 
 class Comment(GenericEntry):
-    text = models.TextField(max_length=255)
-    owner = models.ForeignKey(User)
     # can be on answer OR question
     on_answer = models.BooleanField(default=True)
     parent_answer = models.ForeignKey(Answer)
     parent_question = models.ForeignKey(Question)
 
 
-class Tag(models.Model):
-    text = models.CharField(max_length=255)
+class QuestionVote(models.Model):
+    question = models.ForeignKey(Question)
+
 
 
 # class Score(models.Model):
