@@ -34,7 +34,7 @@
 
         {% if request.user.is_authenticated %}
           <li role="presentation"><a href="{% url 'view_user' request.user.id %}">User: {{ request.user.username }}</a></li>
-          <li role="presentation"><a href="{% url 'logout' %}">log out</a></li>
+          <li role="presentation"><a href="{% url 'logout' %}?next=/questions/">log out</a></li>
         {% else %}
          <li role="presentation"><a href="{% url 'login' %}">Log in</a></li>
          <li role="presentation"><a href="{% url 'register' %}">Create an account</a></li>
