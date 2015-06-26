@@ -22,24 +22,21 @@ class GenericEntry(models.Model): # parent class for Q & A
         abstract = True
 
 
+class Comment(GenericEntry):
+    voter = models.ManyToManyField(User, related_name="voted_comment")
+
+
 class Question(GenericEntry):
     title = models.CharField(max_length=255)
     tag = models.ManyToManyField(Tag)
     voter = models.ManyToManyField(User, related_name="voted_question")
+    comments = models.ManyToManyField(Comment)
 
 
 class Answer(GenericEntry):
     parent_question = models.ForeignKey(Question)
     voter = models.ManyToManyField(User, related_name="voted_answer")
-
-
-class Comment(GenericEntry):
-    # can be on answer OR question
-    on_answer = models.BooleanField(default=True)
-    parent_answer = models.ForeignKey(Answer, null=True)
-    parent_question = models.ForeignKey(Question, null=True)
-    voter = models.ManyToManyField(User, related_name="voted_comment")
-
+    comments = models.ManyToManyField(Comment)
 
 
 # class Score(models.Model):
