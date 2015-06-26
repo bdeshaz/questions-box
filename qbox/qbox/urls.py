@@ -27,10 +27,10 @@ urlpatterns = [
                     template_name="questions.html",
                     context_object_name='questions',
                     paginate_by=30,
-                    ), name='questions'),
+                    ), name='view_questions'),
     url(r'^ask/', CreateView.as_view(
                     model=models.Question,
                     template_name="ask.html",
                     ), name='ask_question'),
-    url(r'^q/(?P<pk>\d+)', QuestionDetailView.as_view(), name="show_question")
+    url(r'^q/(?P<pk>\d+)', views.QuestionDetailView.as_view(), name="show_question")
 ]

@@ -8,19 +8,19 @@ from .models import Question, Answer, Tag, Comment
 
 class QuestionDetailView(django_views.ListView):
     template_name = 'question.html'
-    model=models.Answer
+    model = Answer
     context_object_name='answers'
     paginate_by=30
-	self.question = None
+    question = None
 
-	def dispatch(self, *args, **kwargs):
-		self.question = Question.objects.get(pk=self.kwargs['pk'])
-		return super(QuestionDetailView, self).dispatch(*args, **kwargs)
+    def dispatch(self, *args, **kwargs):
+        self.question = Question.objects.get(pk=self.kwargs['pk'])
+        return super(QuestionDetailView, self).dispatch(*args, **kwargs)
 
-	def get_queryset(self):
-		return self.question.answer_set.order_by('-posted_at')
+    def get_queryset(self):
+        return self.question.answer_set.order_by('-posted_at')
 
-	def get_context_data(self, **kwargs):
-		context = super(QuestionDetailView, self).get_context_data(**kwargs)
-		context['question'] = self.question
-		return context
+    def get_context_data(self, **kwargs):
+        context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        context['question'] = self.question
+        return context
