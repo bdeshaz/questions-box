@@ -1,18 +1,18 @@
 from django.contrib import admin
-from qbox.qa.models import Tag, Comment, Answer, Question
+from qa.models import Tag, Comment, Answer, Question
 
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ['text']
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['text', 'posted_at', 'score', 'owner', 'voter']
+    list_display = ['text', 'posted_at', 'score', 'owner']
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['title', 'tag', 'voter', 'comments', 'text', 'posted_at', 'score', 'owner']
+    list_display = ['title', 'text', 'posted_at', 'score', 'owner']
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ['parent_question', 'voter', 'comments']
+    list_display = ['parent_question']
 
 # Register your models here.
 admin.site.register(Tag, TagAdmin)
