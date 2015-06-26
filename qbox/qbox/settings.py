@@ -78,20 +78,14 @@ WSGI_APPLICATION = 'qbox.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 
-if os.environ.get('DATABASE_URL', None): # if deployed on Heroku
-    print("you should be on heroku!!!")
-    import dj_database_url
-    DATABASES = {}
-    DATABASES['default'] = dj_database_url.config()
-else: # locally hosting
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'qbox',
-            'USER': 'admin',
-            'HOST': '127.0.0.1'
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'qbox',
+        'USER': 'admin',
+        'HOST': '127.0.0.1'
     }
+}
 
 
 
