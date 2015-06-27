@@ -7,14 +7,19 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ('title', 'text')
 
+class QuestionCommentForm(forms.ModelForm):
+    class Meta:
+        model = QuestionComment
+        fields = ('text', )
+
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ('text',)
 
-class CommentForm(forms.ModelForm):
+class AnswerCommentForm(forms.ModelForm):
     class Meta:
-        model = Comment
+        model = AnswerComment
         fields = ('text',)
 
 class TagForm(forms.ModelForm):

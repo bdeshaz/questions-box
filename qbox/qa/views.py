@@ -6,9 +6,27 @@ from django.core.urlresolvers import reverse
 from qa.models import Question, Answer, Tag, Comment
 import qa.forms as QA_forms
 
+from django.views.generic import View, RedirectView, ListView
 # Create your views here.
 
-class QuestionDetailView(django_views.ListView):
+class AnswerUpvote(django_views.RedirectView):
+    permanent = True
+    answer = None
+    voter = None
+
+    def dispatch(self, *args, **kwargs):
+        self.answer = Answer.objects.get(pk=self.kwargs['pk'])
+        self.voter = request.user
+        vote = AnswerUpvote(parent=self.answer, voter=self.voter)
+        vote.save()
+        return super(AnswerUpvote, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        # return render(self.request, "question.html")
+        return redirect('show_question', self.answer.parent.id)
+
+
+class QuestionDetailView(django_views.View): # used to be ListView
     template_name = 'question.html'
     model = Answer
     context_object_name='answers'
@@ -19,19 +37,31 @@ class QuestionDetailView(django_views.ListView):
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         return super(QuestionDetailView, self).dispatch(*args, **kwargs)
 
+    # def get(self, request):
+    #     return render(request, 'question.html', {})
+
     def get_queryset(self):
         return self.question.answer_set.order_by('-posted_at')
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         context['question'] = self.question
-        context['answer_form'] = QA_forms.AnswerForm
+        context['answer_form'] = QA_forms.AnswerForm()
+        context['question_comment'] = QA_forms.QuestionCommentForm()
+        context['answer_comment'] = QA_forms.AnswerCommentForm()
+        context['tag_form'] = QA_forms.TagForm()
         return context
 
     def post(self, *args, **kwargs):
-        answer_form = QA_forms.AnswerForm(self.request.POST)
-        answer = answer_form.save()
-        return render(request, self.template_name)
+        if 'answer_form' in self.request.POST:
+            answer_form = QA_forms.AnswerForm(self.request.POST)
+            answer = answer_form.save()
+        elif 'question_comment' in self.request.POST:
+            pass
+        elif 'answer_comment' in self.request.POST:
+            pass
+        return redirect('view_question', self.question.id)
+
 
 class AskQuestionView(django_views.edit.CreateView): #or FormView
     model = Question
@@ -45,4 +75,3 @@ class AskQuestionView(django_views.edit.CreateView): #or FormView
         question.owner = self.request.user
         return super(AskQuestionView, self).form_valid(form)
         question.save()
-

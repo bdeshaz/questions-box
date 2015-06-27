@@ -12,4 +12,5 @@ urlpatterns = [
                     ), name='view_questions'),
     url(r'^ask/', views.AskQuestionView.as_view(), name='ask_question'),
     url(r'^q/(?P<pk>\d+)', views.QuestionDetailView.as_view(), name="show_question"),
+    url(r'^Qupvote/(?P<pk>)', views.AnswerUpvote.as_view(), name='answer_upvote')
 ]
