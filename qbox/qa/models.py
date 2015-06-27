@@ -29,7 +29,7 @@ class Question(GenericEntry):
         return self.title
 
     def score(self):
-        # return 0
+        return 0
         if self.upvote_set is None:
             return 0
         else:

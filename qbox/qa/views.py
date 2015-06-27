@@ -31,7 +31,7 @@ class AnswerUpvote(django_views.RedirectView):
 
 
 class QuestionDetailView(django_views.View):  # used to be ListView
-    template_name = 'question.html'
+    template_name = 'qa/question.html'
     model = Answer
     context_object_name = 'answers'
     paginate_by = 30
@@ -74,7 +74,7 @@ class QuestionDetailView(django_views.View):  # used to be ListView
 
 class AskQuestionView(django_views.edit.CreateView):  # or FormView
     model = Question
-    template_name = "ask.html"
+    template_name = "qa/ask.html"
     fields = ["title", "text"]
     success_url = 'ask_question'
     # success_url = 'http://www.google.com'

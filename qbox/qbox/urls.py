@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'accounts/profile', ListView.as_view(
         model=Question,
-        template_name="questions.html",
+        template_name="qa/questions.html",
         context_object_name='questions',
         paginate_by=30,
     )),

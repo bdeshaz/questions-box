@@ -6,7 +6,7 @@ from qa import models, views
 urlpatterns = [
     url(r'^questions/', ListView.as_view(
                     model=models.Question,
-                    template_name="questions.html",
+                    template_name="qa/questions.html",
                     context_object_name='questions',
                     paginate_by=30,
                     ), name='view_questions'),

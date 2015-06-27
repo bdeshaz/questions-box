@@ -10,7 +10,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^u/(?P<pk>\d+)', DetailView.as_view(model=User,
-                            template_name='user_detail.html',
+                            template_name='users/user_detail.html',
                             ), name='view_user'),
     # url(r'^register/$', CreateView.as_view(model=User,
     #                         form_class=UserCreationForm,
@@ -19,7 +19,7 @@ urlpatterns = [
     # url(r'^login/', auth_views.login, name='login'),
     # url(r'^logout/', auth_views.logout, name='logout'),
     url(r'^users/$', ListView.as_view(model=User,
-                            template_name='user_list.html',
+                            template_name='users/user_list.html',
                             context_object_name='users',
                             paginate_by=30), name='view_users')
 
