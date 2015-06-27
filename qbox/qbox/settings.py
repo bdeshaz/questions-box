@@ -40,7 +40,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bootstrap3',
     'qa', 'users',
+    'registration'
 )
+
+REGISTRATION_OPEN = True
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/questions/'
+LOGIN_URL = '/accounts/login/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,7 +128,7 @@ BOOTSTRAP3 = {
     'base_url': '/static/bootstrap/',
 
     # The complete URL to the Bootstrap CSS file (None means no theme)
-#    'theme_url': '/static/bootstrap/css/sandstone.css',
+    #    'theme_url': '/static/bootstrap/css/sandstone.css',
     'theme_url': '/static/bootstrap/css/bootstrap-theme.min.css',
 
     # Include jQuery with Bootstrap JavaScript (affects django-bootstrap3 template tags)

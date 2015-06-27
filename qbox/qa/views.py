@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from qa.models import Question, Answer, Tag, AnswerComment, QuestionComment, \
-                        QuestionUpvote, AnswerUpvote, QuestionDownvote, AnswerDownvote, \
-                        AnswerCommentUpvote, QuestionCommentUpvote
+    QuestionUpvote, AnswerUpvote, QuestionDownvote, AnswerDownvote, \
+    AnswerCommentUpvote, QuestionCommentUpvote
 import qa.forms as QA_forms
 
 from django.views.generic import View, RedirectView, ListView
@@ -28,11 +28,11 @@ class AnswerUpvote(django_views.RedirectView):
         return redirect('show_question', self.answer.parent.id)
 
 
-class QuestionDetailView(django_views.View): # used to be ListView
+class QuestionDetailView(django_views.View):  # used to be ListView
     template_name = 'question.html'
     model = Answer
-    context_object_name='answers'
-    paginate_by=30
+    context_object_name = 'answers'
+    paginate_by = 30
     question = None
 
     def dispatch(self, *args, **kwargs):
@@ -70,7 +70,7 @@ class QuestionDetailView(django_views.View): # used to be ListView
         return redirect('view_question', self.question.id)
 
 
-class AskQuestionView(django_views.edit.CreateView): #or FormView
+class AskQuestionView(django_views.edit.CreateView):  # or FormView
     model = Question
     template_name = "ask.html"
     fields = ["title", "text"]

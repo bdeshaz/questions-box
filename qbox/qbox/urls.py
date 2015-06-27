@@ -28,4 +28,5 @@ urlpatterns = [
     )),
     url(r'^', include('qa.urls')),
     url(r'^', include('users.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
 ]  # url(r'^accounts/', include('django.contrib.auth.urls')),
