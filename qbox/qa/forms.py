@@ -1,28 +1,36 @@
 from django import forms
-from .models import Question, Tag, Comment, Answer
+from qa import models
+from django.forms.widgets import MultipleHiddenInput
 
 
 class QuestionForm(forms.ModelForm):
+    ids = forms.MultipleChoiceField(widget=MultipleHiddenInput())
+    # http://stackoverflow.com/questions/2701303/multiplehiddeninput-doesnt-encode-properly-over-post
     class Meta:
-        model = Question
+        model = models.Question
         fields = ('title', 'text')
 
 class QuestionCommentForm(forms.ModelForm):
     class Meta:
-        model = QuestionComment
+        model = models.QuestionComment
         fields = ('text', )
 
 class AnswerForm(forms.ModelForm):
     class Meta:
-        model = Answer
+        model = models.Answer
         fields = ('text',)
 
 class AnswerCommentForm(forms.ModelForm):
     class Meta:
-        model = AnswerComment
+        model = models.AnswerComment
         fields = ('text',)
 
 class TagForm(forms.ModelForm):
     class Meta:
-        model = Tag
+        model = models.Tag
         fields = ('text',)
+
+# other approaches for array input
+# from django.contrib.postgres.forms import SimpleArrayField
+#     tags = SimpleArrayField(forms.CharacterField(max_length=255))
+    # https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/forms/#simplearrayfield

@@ -5,30 +5,13 @@ from django.utils import timezone
 import datetime
 import pytz
 
-# Create your models here.
-
-
+# Abstract classes
 class GenericEntry(models.Model): # parent class for Q & A
     text = models.TextField()
     posted_at = models.DateTimeField(auto_now=True)
-    score = models.IntegerField(default=0)
     # relationships
     owner = models.ForeignKey(User)
 
-    class Meta:
-        abstract = True
-
-
-class GenericUpvote(models.Model):
-    voter = models.PrimaryKey(User)
-    posted_at = models.DateTimeField(auto_now=True)
-    class Meta:
-        abstract = True
-
-
-class GenericDownvote(models.Model):
-    voter = models.PrimaryKey(User)
-    posted_at = models.DateTimeField(auto_now=True)
     class Meta:
         abstract = True
 
@@ -37,41 +20,51 @@ class Tag(models.Model):
     text = models.CharField(max_length=255)
 
 
-class Comment(GenericEntry):
-    voter = models.ManyToManyField(User, related_name="voted_comment")
-
-
-class CommentUpvote(GenericUpvote):
-    parent = models.PrimaryKey(Comment)
-
-
+# Question classes
 class Question(GenericEntry):
     title = models.CharField(max_length=255)
     tag = models.ManyToManyField(Tag)
-    # voter = models.ManyToManyField(User, related_name="voted_question")
-    comments = models.ManyToManyField(Comment)
 
     def __str__(self):
         return self.title
 
     def score(self):
-        s = self.questionupvote_set.count() * 5
-        s -= self.questiondownvote_set.count() * 2
-        return s
+        return 0
+        if self.upvote_set is None:
+            return 0
+        else:
+            s = self.upvote_set.count() * 5
+            s -= self.downvote_set.count() * 2
+
+            # s = self.questionupvote_set.count() * 5
+            # s -= self.questiondownvote_set.count() * 2
+            return s
 
 
-class QuestionUpvote(GenericUpvote):
-    parent = models.PrimaryKey(Question)
+class QuestionComment(GenericEntry):
+    parent = models.ForeignKey(Question, related_name="comment", related_query_name="comment_set")
 
 
-class QuestionDownvote(GenericDownvote):
-    parent = models.PrimaryKey(Question)
+class QuestionCommentUpvote(models.Model):
+    parent = models.ForeignKey(QuestionComment, related_name="upvote")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)
 
 
+class QuestionUpvote(models.Model):
+    parent = models.ForeignKey(Question, related_name="upvote", related_query_name="upvote_set")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)
+
+
+class QuestionDownvote(models.Model):
+    parent = models.ForeignKey(Question, related_name="downvote")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)
+
+# Answer classes
 class Answer(GenericEntry):
-    parent_question = models.ForeignKey(Question)
-    # voter = models.ManyToManyField(User, related_name="voted_answer")
-    comments = models.ManyToManyField(Comment)
+    parent = models.ForeignKey(Question)
 
     def score(self):
         s = self.answerupvote_set.count() * 10
@@ -79,10 +72,23 @@ class Answer(GenericEntry):
         return s
 
 
+class AnswerComment(GenericEntry):
+    parent = models.ForeignKey(Answer, related_name="comment", related_query_name="comment_set")
 
-class AnswerUpvote(GenericUpvote):
-    parent = models.PrimaryKey(Answer)
+
+class AnswerCommentUpvote(models.Model):
+    parent = models.ForeignKey(AnswerComment, related_name="upvote")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)
 
 
-class AnswerDownvote(GenericDownvote):
-    parent = models.PrimaryKey(Answer)
+class AnswerUpvote(models.Model):
+    parent = models.ForeignKey(Answer, related_name="upvote", related_query_name="upvote_set")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)
+
+
+class AnswerDownvote(models.Model):
+    parent = models.ForeignKey(Answer, related_name="downvote")
+    voter = models.ForeignKey(User)
+    posted_at = models.DateTimeField(auto_now=True)

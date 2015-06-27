@@ -3,7 +3,9 @@ import django.views.generic as django_views
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from qa.models import Question, Answer, Tag, Comment
+from qa.models import Question, Answer, Tag, AnswerComment, QuestionComment, \
+                        QuestionUpvote, AnswerUpvote, QuestionDownvote, AnswerDownvote, \
+                        AnswerCommentUpvote, QuestionCommentUpvote
 import qa.forms as QA_forms
 
 from django.views.generic import View, RedirectView, ListView
@@ -47,6 +49,10 @@ class QuestionDetailView(django_views.View): # used to be ListView
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         context['question'] = self.question
         context['answer_form'] = QA_forms.AnswerForm()
+        question_comment_forms = []
+        for answer in self.question.answer_set:
+            question_comment_forms.append(QA_forms.QuestionCommentForm())
+        form = MyForm(initial={'ids': [o.id for o in queryset]})
         context['question_comment'] = QA_forms.QuestionCommentForm()
         context['answer_comment'] = QA_forms.AnswerCommentForm()
         context['tag_form'] = QA_forms.TagForm()
@@ -56,6 +62,7 @@ class QuestionDetailView(django_views.View): # used to be ListView
         if 'answer_form' in self.request.POST:
             answer_form = QA_forms.AnswerForm(self.request.POST)
             answer = answer_form.save()
+            request.POST.getlist('ids')
         elif 'question_comment' in self.request.POST:
             pass
         elif 'answer_comment' in self.request.POST:
@@ -66,12 +73,19 @@ class QuestionDetailView(django_views.View): # used to be ListView
 class AskQuestionView(django_views.edit.CreateView): #or FormView
     model = Question
     template_name = "ask.html"
-    fields = ["title", "text", "score"]
+    fields = ["title", "text"]
+    success_url = 'ask_question'
     # success_url = 'http://www.google.com'
 
     def form_valid(self, form):
-        question = form.save(commit=False)
-        question.score = 0
-        question.owner = self.request.user
+        user = self.request.user
+        if user is not None and user.is_authenticated():
+            question = form.save(commit=False)
+            question.owner = user
+            question.save()
+            message_text = "Your question has been added."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        else:
+            message_text = "Log in to ask questions."
+            messages.add_message(self.request, messages.ERROR, message_text)
         return super(AskQuestionView, self).form_valid(form)
-        question.save()
