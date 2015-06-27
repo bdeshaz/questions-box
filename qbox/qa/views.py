@@ -96,3 +96,4 @@ class AskQuestionView(django_views.edit.CreateView):  # or FormView
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
         return '/questions/'
+
