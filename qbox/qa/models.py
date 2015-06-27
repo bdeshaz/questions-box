@@ -29,16 +29,10 @@ class Question(GenericEntry):
         return self.title
 
     def score(self):
-        return 0
-        if self.upvote_set is None:
-            return 0
-        else:
-            s = self.upvote_set.count() * 5
-            s -= self.downvote_set.count() * 2
-
-            # s = self.questionupvote_set.count() * 5
-            # s -= self.questiondownvote_set.count() * 2
-            return s
+        # return 0
+        s = self.upvote.all().count() * 5
+        s -= self.downvote.all().count() * 2
+        return s
 
 
 class QuestionComment(GenericEntry):
