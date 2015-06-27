@@ -30,7 +30,7 @@ class AnswerUpvote(django_views.RedirectView):
         return redirect('show_question', self.answer.parent.id)
 
 
-class QuestionDetailView(django_views.View):  # used to be ListView
+class QuestionDetailView(django_views.ListView):  # used to be ListView
     template_name = 'qa/question.html'
     model = Answer
     context_object_name = 'answers'
@@ -51,25 +51,37 @@ class QuestionDetailView(django_views.View):  # used to be ListView
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         context['question'] = self.question
         context['answer_form'] = QA_forms.AnswerForm()
-        question_comment_forms = []
-        for answer in self.question.answer_set:
-            question_comment_forms.append(QA_forms.QuestionCommentForm())
-        form = MyForm(initial={'ids': [o.id for o in queryset]})
+        # question_comment_forms = []
+        # for answer in self.question.answer_set:
+        #     question_comment_forms.append(QA_forms.QuestionCommentForm())
+        # form = MyForm(initial={'ids': [o.id for o in queryset]})
+        # context['answer_comment'] = QA_forms.AnswerCommentForm()
         context['question_comment'] = QA_forms.QuestionCommentForm()
-        context['answer_comment'] = QA_forms.AnswerCommentForm()
-        context['tag_form'] = QA_forms.TagForm()
+        # context['tag_form'] = QA_forms.TagForm()
         return context
 
     def post(self, *args, **kwargs):
-        if 'answer_form' in self.request.POST:
-            answer_form = QA_forms.AnswerForm(self.request.POST)
-            answer = answer_form.save()
-            request.POST.getlist('ids')
-        elif 'question_comment' in self.request.POST:
-            pass
-        elif 'answer_comment' in self.request.POST:
-            pass
-        return redirect('view_question', self.question.id)
+        user = self.request.user
+        print(self.request.POST)
+        if user is not None and user.is_authenticated():
+            if 'answer_form' in self.request.POST:
+                answer_form = QA_forms.AnswerForm(self.request.POST)
+                answer = answer_form.save()
+                request.POST.getlist('ids')
+            elif 'question_comment' in self.request.POST:
+                question_comment = QA_forms.QuestionCommentForm(self.request.POST)
+                comment = question_comment.save(commit=False)
+                comment.owner = user
+                comment.parent = self.question
+                comment.save()
+                message_text = "Your comment has been added. Remember to be civil."
+                messages.add_message(self.request, messages.SUCCESS, message_text)
+            elif 'answer_comment' in self.request.POST:
+                pass
+        else:
+            message_text = "Log in to post things."
+            messages.add_message(self.request, messages.ERROR, message_text)
+        return redirect("/q/"+str(self.question.id))
 
 
 class AskQuestionView(django_views.edit.CreateView):  # or FormView

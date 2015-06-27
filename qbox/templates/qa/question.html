@@ -4,9 +4,43 @@
 {% block content %}
 
 <div class="jumbotron">
-    <h1>{{ question.title }}</h1>
+    <h3>{{ question.title }}</h3>
     <p class="lead">{{ question.text }}</p>
 </div>
+
+{% for comment in question.comment.all %}
+<div class="row marketing">
+    <div class="col-md-8">
+        {{ comment.text }}
+    </div>
+    <div class="col-md-4">
+        {{ comment.owner }}
+    </div>
+</div>
+{% endfor %}
+
+<div class="row marketing">
+
+    <div class="col-md-4">
+        <h4>Leave a Comment</h4>
+    </div>
+    <div class="col-md-8">
+        <form method="POST" action="{% url 'show_question' pk=question.id %}">
+            {% csrf_token %}
+            {% bootstrap_form question_comment %}
+        <input type="submit" name="question_comment" value="Comment on this question"/>
+        </form>
+      </p>
+     </div>
+</div>
+
+<h2>Answer this Question</h2>
+<form method="POST" action="{% url 'show_question' question.id %}">
+    {% csrf_token %}
+    {% bootstrap_form answer_form %}
+<input type="submit" name="submit" value="Leave this answer"/>
+</form>
+
 
 <div class="row marketing">
 
