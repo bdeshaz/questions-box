@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin, auth
 from django.views.generic import ListView
 from qa.models import Question
+from qa.views import MyRegistrationView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -28,5 +29,6 @@ urlpatterns = [
     )),
     url(r'^', include('qa.urls')),
     url(r'^', include('users.urls')),
+    url(r'^accounts/register/$', MyRegistrationView.as_view(), name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
 ]  # url(r'^accounts/', include('django.contrib.auth.urls')),

@@ -10,6 +10,8 @@ import qa.forms as QA_forms
 
 from django.views.generic import View, RedirectView, ListView
 # Create your views here.
+from registration.backends.simple.views import RegistrationView
+
 
 class AnswerUpvote(django_views.RedirectView):
     permanent = True
@@ -89,3 +91,8 @@ class AskQuestionView(django_views.edit.CreateView):  # or FormView
             message_text = "Log in to ask questions."
             messages.add_message(self.request, messages.ERROR, message_text)
         return super(AskQuestionView, self).form_valid(form)
+
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, request, user):
+        return '/questions/'
