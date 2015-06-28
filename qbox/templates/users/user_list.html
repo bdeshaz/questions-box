@@ -18,6 +18,7 @@
 			<th>Username</th>
 			<th>Score</th>
 			<th>Questions</th>
+            <th>Answers</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,7 +26,8 @@
 		<tr>
 			<td><a href="{% url 'view_user' uz.id %}">{{ uz.username }}</a></td>
 			<td>{{ uz.score }}</td>
-			<td>1</td>
+			<td>{{ uz.question_set.count }}</td>
+            <td>{{ uz.answer_set.count }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
