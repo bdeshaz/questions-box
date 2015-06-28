@@ -107,8 +107,8 @@ class Answer(GenericEntry):
     show = models.BooleanField(default=True)
 
     def score(self):
-        s = self.upvote.all().count() * 5
-        s -= self.downvote.all().count() * 2
+        s = self.upvote.all().count() * 10
+        s -= self.downvote.all().count() * 5
         return s
 
 

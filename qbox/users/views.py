@@ -25,6 +25,11 @@ class UserDetailView(generic.DetailView):
         context["answers"] = self.the_user.answer_set.all()
         context["questions"] = self.the_user.question_set.all()
         context["user"] = self.the_user
+        context["score"] = (
+            sum(num.score() for num in self.the_user.answer_set.all()) +
+            (self.the_user.question_set.count() * 5) +
+            (self.the_user.answerdownvote_set.count() * -1)
+        )
 
         return context
 
