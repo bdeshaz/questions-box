@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h2>{{ question.title }}</h2>
+        <p class="lead">{{ question.text }}</p>
+        <p class="pull-right">asked by: <a href="{% url 'view_user' question.owner.id %}">{{ question.owner.username }}</a></p>
+    </div>
+
+    <p> Existing tags on this question:</p>
+    <ul>
+        {% for tag in question.tag.all %}
+        <li><a href="{% url 'view_tag' tag.id %}">{{ tag.text }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST" action="{% url 'add_tag' question.id %}">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+    <input type="submit" name="submit" class="btn btn-default" value="Add tag"/>
+    </form>
+{% endblock %}

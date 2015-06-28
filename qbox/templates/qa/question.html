@@ -21,6 +21,14 @@
     <p class="pull-right">asked by: <a href="{% url 'view_user' question.owner.id %}">{{ question.owner.username }}</a></p>
 </div>
 
+<p> <a href="{% url 'add_tag' question.id %}">Add tags on this question</a> </p>
+<p> Existing tags on this question:</p>
+<ul>
+    {% for tag in question.tag.all %}
+    <li><a href="{% url 'view_tag' tag.id %}">{{ tag.text }}</a></li>
+    {% endfor %}
+</ul>
+
 {% for comment in question.comment.all %}
 <div class="row marketing">
     <div class="col-md-2">

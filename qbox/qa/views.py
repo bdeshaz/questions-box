@@ -230,6 +230,72 @@ class AskQuestionView(django_views.edit.CreateView):  # or FormView
         return super(AskQuestionView, self).form_valid(form)
 
 
+class AddTagView(django_views.edit.CreateView):  # or FormView
+    model = Tag
+    q_id = None
+    question = None
+    # query_string = True
+    template_name = "tags/edit_question.html"
+    fields = ["text"]
+    success_url = 'add_tag'
+
+    def dispatch(self, *args, **kwargs):
+        self.q_id = kwargs['pk']
+        self.question = Question.objects.get(pk=self.q_id)
+        self.success_url = self.q_id
+        return super(AddTagView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AddTagView, self).get_context_data(**kwargs)
+        context['question'] = self.question
+        context['form'] = QA_forms.TagForm()
+        return context
+
+
+    def form_valid(self, form):
+        tag_text = form.cleaned_data['text']
+        already_exists = False
+        for tag in Tag.objects.all():
+            if tag_text.lower() == tag.text.lower():
+                already_exists = True
+                tag_id = tag.id
+        if already_exists:
+            tag = Tag.objects.get(pk=tag_id)
+            self.question.tag.add(tag)
+            self.question.save()
+            message_text = "You have associated a tag with this question."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        else:
+            tag = form.save()
+            self.question.tag.add(tag)
+            self.question.save()
+            message_text = "You have created a new tag and associated it with the question."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        # return
+        # return render(self.template_name, self.question.id)
+        return super(AddTagView, self).form_valid(form)
+
+
+class TagDetailView(django_views.ListView):
+    model = Question
+    template_name = "tags/tag.html"
+    context_object_name='questions'
+    paginate_by=30
+    tag = None
+
+    def dispatch(self, *args, **kwargs):
+        self.tag = Tag.objects.get(pk=self.kwargs['pk'])
+        return super(TagDetailView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TagDetailView, self).get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
+
+    def get_queryset(self):
+        return self.tag.question_set.order_by('-posted_at')
+
+
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
         return '/questions/'
