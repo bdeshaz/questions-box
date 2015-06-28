@@ -23,11 +23,18 @@
 
 {% for comment in question.comment.all %}
 <div class="row marketing">
+    <div class="col-md-2">
+        {{ comment.balance }}
+        {% if comment.show %}
+        &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'question_comment_upvote' comment.id %}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+        {% endif %}
+    </div>
     <div class="col-md-8">
         {{ comment.text }}
     </div>
-    <div class="col-md-4">
-        {{ comment.owner }}
+    <div class="col-md-2">
+        <a href="{% url 'view_user' comment.owner.id %}">{{ comment.owner }}</a>
     </div>
 </div>
 {% endfor %}

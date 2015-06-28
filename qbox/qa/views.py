@@ -12,7 +12,7 @@ from django.views.generic import View, RedirectView, ListView
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
 
-
+# Begin question and answer vote redirects
 class QuestionUpvoteView(django_views.RedirectView):
     permanent = False
     query_string = True
@@ -76,6 +76,22 @@ class AnswerDownvoteView(django_views.RedirectView):
             message_text = "You have downvoted that answer."
             messages.add_message(self.request, messages.SUCCESS, message_text)
         return super(AnswerDownvoteView, self).dispatch(*args, **kwargs)
+
+# comment upvote redirects
+class QuestionCommentUpvoteView(django_views.RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
+
+    def dispatch(self, *args, **kwargs):
+        comment = QuestionComment.objects.get(pk=kwargs['pk'])
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = QuestionCommentUpvote(parent=comment, voter=voter)
+            vote.save()
+            message_text = "You have upvoted that comment."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        return super(QuestionCommentUpvoteView, self).dispatch(*args, **kwargs)
 
 
 class QuestionDetailView(django_views.ListView):  # used to be ListView

@@ -7,10 +7,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views
 # import django.contrib.auth.views as auth_views
-from users.views import QuestionDetailView
+from users.views import UserDetailView
 
 urlpatterns = [
-    url(r'^u/(?P<pk>\d+)', QuestionDetailView.as_view(), name='view_user'),
+    url(r'^u/(?P<pk>\d+)', UserDetailView.as_view(), name='view_user'),
 
     url(r'^users/$', ListView.as_view(model=User,
                                       template_name='users/user_list.html',

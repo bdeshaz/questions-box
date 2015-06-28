@@ -72,6 +72,10 @@ class QuestionComment(GenericEntry):
                                 related_query_name="comment_set")
     show = models.BooleanField(default=True)
 
+    def balance(self):
+        s = self.upvote.all().count()
+        return s
+
 
 class QuestionCommentUpvote(models.Model):
     parent = models.ForeignKey(QuestionComment, related_name="upvote")
@@ -113,6 +117,10 @@ class AnswerComment(GenericEntry):
     parent = models.ForeignKey(Answer, related_name="comment",
                                 related_query_name="comment_set")
     show = models.BooleanField(default=True)
+
+    def balance(self):
+        s = self.upvote.all().count()
+        return s
 
 
 class AnswerCommentUpvote(models.Model):
