@@ -40,22 +40,27 @@ class Question(GenericEntry):
         return s
 
     def set_show(self, u):
-        def set_show_on_item(item, user):
+        def set_show_on_item(item, user, check_downvote=True):
+            do_show = True # assume will show, try to disprove
             if u is None:
-                item.show = False
+                do_show = False # no upvoting if not logged in
             elif u in [v.voter for v in item.upvote.all()]:
-                item.show = False
-            else:
-                item.show = True
+                do_show = False
+            if check_downvote:
+                if u in [v.voter for v in item.downvote.all()]:
+                    do_show = False
+            if u == item.owner:
+                do_show = False
+            item.show = do_show
             item.save()
 
         set_show_on_item(self, u)
         for c in self.comment.all():
-            set_show_on_item(c, u)
+            set_show_on_item(c, u, check_downvote=False)
         for a in self.answer_set.all():
             set_show_on_item(a, u)
             for c in a.comment.all():
-                set_show_on_item(c, u)
+                set_show_on_item(c, u, check_downvote=False)
 
 
     def has_upvoted(self, u):
