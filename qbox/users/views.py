@@ -34,6 +34,32 @@ class UserDetailView(generic.DetailView):
         return context
 
 
+class UserListView(generic.ListView):
+    model=User
+    template_name='users/user_list.html'
+    context_object_name='users'
+    paginate_by=30
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        print(context)
+        for i in range(len(context['users'])):
+            usr = context['users'][i]
+            context['users'][i].print_score = (
+                sum(num.score() for num in usr.answer_set.all()) +
+                (usr.question_set.count() * 5) +
+                (usr.answerdownvote_set.count() * -1)
+            )
+        # for
+        # context["score"] = (
+        #     sum(num.score() for num in self.the_user.answer_set.all()) +
+        #     (self.the_user.question_set.count() * 5) +
+        #     (self.the_user.answerdownvote_set.count() * -1)
+        # context['question'] = self.question
+        # context['form'] = QA_forms.TagForm()
+        return context
+
+
 @login_required
 def edit_user(request):
     user = request.user

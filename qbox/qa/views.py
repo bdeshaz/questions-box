@@ -142,9 +142,6 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         return super(QuestionDetailView, self).dispatch(*args, **kwargs)
 
-    # def get(self, request):
-    #     return render(request, 'question.html', {})
-
     def get_queryset(self):
         return self.question.answer_set.order_by('-posted_at')
 
@@ -154,11 +151,6 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
         context['question'] = self.question
         context['question_comment'] = QA_forms.QuestionCommentForm()
         context['answer_form'] = QA_forms.AnswerForm()
-        # question_comment_forms = []
-        # for answer in self.question.answer_set:
-        #     question_comment_forms.append(QA_forms.QuestionCommentForm())
-        # form = MyForm(initial={'ids': [o.id for o in queryset]})
-
         ac_list = []
         for ans in self.question.answer_set.all():
             xi = {}
@@ -168,7 +160,6 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
             ac_list.append(xi)
         context['answer_comments'] = ac_list
         print(ac_list)
-        # context['tag_form'] = QA_forms.TagForm()
         return context
 
     def post(self, *args, **kwargs):

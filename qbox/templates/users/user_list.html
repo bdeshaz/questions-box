@@ -25,7 +25,7 @@
 		{% for uz in users %}
 		<tr>
 			<td><a href="{% url 'view_user' uz.id %}">{{ uz.username }}</a></td>
-			<td>{{ uz.score }}</td>
+			<td>{{ uz.print_score }}</td>
 			<td>{{ uz.question_set.count }}</td>
             <td>{{ uz.answer_set.count }}</td>
 		</tr>
