@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>TAG DELETING PAGE</h2>
+    <p class="lead">Use this page to confirm that you want to delete the tag
+		that you just clicked to delete. Really? Really really?</p>
+</div>
+
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object.text }}"?</p>
+    <input type="submit" value="Confirm" />
+</form>
+
+
+{% endblock %}

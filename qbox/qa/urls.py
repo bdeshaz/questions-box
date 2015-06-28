@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from qa import models, views
 
 urlpatterns = [
@@ -22,6 +22,9 @@ urlpatterns = [
     url(r'^q/(?P<pk>\d+)', views.QuestionDetailView.as_view(), name="show_question"),
     url(r'^q_tag/(?P<pk>\d+)', views.AddTagView.as_view(), name="add_tag"),
     url(r'^tag/(?P<pk>\d+)', views.TagDetailView.as_view(), name="view_tag"),
+    url(r'^dtag/(?P<pk>\d+)', DeleteView.as_view(
+                    model=models.Tag,
+                    success_url='/tags/',), name="delete_tag"),
 
     # Voting redirect views
     url(r'^Qdownvote/(?P<pk>\d+)', views.QuestionDownvoteView.as_view(),
