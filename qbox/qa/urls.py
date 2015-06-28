@@ -10,8 +10,19 @@ urlpatterns = [
                     context_object_name='questions',
                     paginate_by=30,
                     ), name='view_questions'),
+
+    url(r'^tags/', ListView.as_view(
+                    model=models.Tag,
+                    template_name="tags/tags.html",
+                    context_object_name='tags',
+                    paginate_by=30,
+                    ), name='view_tags'),
+
     url(r'^ask/', views.AskQuestionView.as_view(), name='ask_question'),
     url(r'^q/(?P<pk>\d+)', views.QuestionDetailView.as_view(), name="show_question"),
+    url(r'^q_tag/(?P<pk>\d+)', views.AddTagView.as_view(), name="add_tag"),
+    url(r'^tag/(?P<pk>\d+)', views.TagDetailView.as_view(), name="view_tag"),
+
     # Voting redirect views
     url(r'^Qdownvote/(?P<pk>\d+)', views.QuestionDownvoteView.as_view(),
                                         name='question_downvote'),
