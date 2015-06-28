@@ -13,7 +13,31 @@ from django.views.generic import View, RedirectView, ListView
 from registration.backends.simple.views import RegistrationView
 
 
-class AnswerUpvote(django_views.RedirectView):
+class QuestionUpvoteView(django_views.RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
+
+    def dispatch(self, *args, **kwargs):
+        question = Question.objects.get(pk=kwargs['pk'])
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = QuestionUpvote(parent=question, voter=voter)
+            vote.save()
+            message_text = "You have upvoted this question."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        # return redirect("/q/"+str(self.kwargs['pk']))
+        return super(QuestionUpvoteView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        # return render(self.request, "question.html")
+        # return reverse('show_question', self.q_id)
+        # return redirect("/q/"+str(self.q_id))
+        # return redirect('show_question', self.answer.parent.id)
+        return super(QuestionUpvoteView, self).get_redirect_url(*args, **kwargs)
+
+
+class AnswerUpvoteView(django_views.RedirectView):
     permanent = True
     answer = None
     voter = None
@@ -23,7 +47,7 @@ class AnswerUpvote(django_views.RedirectView):
         self.voter = request.user
         vote = AnswerUpvote(parent=self.answer, voter=self.voter)
         vote.save()
-        return super(AnswerUpvote, self).dispatch(*args, **kwargs)
+        return super(AnswerUpvoteView, self).dispatch(*args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
         # return render(self.request, "question.html")
@@ -108,4 +132,3 @@ class AskQuestionView(django_views.edit.CreateView):  # or FormView
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
         return '/questions/'
-

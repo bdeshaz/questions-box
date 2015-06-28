@@ -4,7 +4,17 @@
 {% block content %}
 
 <div class="jumbotron">
-    <h3>{{ question.title }}</h3>
+    <h3>
+        <div style="
+            border-radius: 50%; width: 50px; height: 60px; padding: 8px;
+            background: #fff; border: 2px solid black; color: black;
+            text-align: center; font: 32px Arial, sans-serif;
+            display: inline-block;">
+        {{ question.score }}
+        </div>
+        <a href="{% url 'question_upvote' question.id %}"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <span class="glyphicon glyphicon-arrow-down"></span>
+        {{ question.title }}</h3>
     <p class="lead">{{ question.text }}</p>
 </div>
 

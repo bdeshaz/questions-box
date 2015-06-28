@@ -36,7 +36,8 @@ class Question(GenericEntry):
 
 
 class QuestionComment(GenericEntry):
-    parent = models.ForeignKey(Question, related_name="comment", related_query_name="comment_set")
+    parent = models.ForeignKey(Question, related_name="comment",
+                                related_query_name="comment_set")
 
 
 class QuestionCommentUpvote(models.Model):
@@ -46,13 +47,15 @@ class QuestionCommentUpvote(models.Model):
 
 
 class QuestionUpvote(models.Model):
-    parent = models.ForeignKey(Question, related_name="upvote", related_query_name="upvote_set")
+    parent = models.ForeignKey(Question, related_name="upvote",
+                                related_query_name="upvote_set")
     voter = models.ForeignKey(User)
     posted_at = models.DateTimeField(auto_now=True)
 
 
 class QuestionDownvote(models.Model):
-    parent = models.ForeignKey(Question, related_name="downvote")
+    parent = models.ForeignKey(Question, related_name="downvote",
+                                related_query_name="downvote_set")
     voter = models.ForeignKey(User)
     posted_at = models.DateTimeField(auto_now=True)
 
@@ -67,7 +70,8 @@ class Answer(GenericEntry):
 
 
 class AnswerComment(GenericEntry):
-    parent = models.ForeignKey(Answer, related_name="comment", related_query_name="comment_set")
+    parent = models.ForeignKey(Answer, related_name="comment",
+                                related_query_name="comment_set")
 
 
 class AnswerCommentUpvote(models.Model):
@@ -77,12 +81,14 @@ class AnswerCommentUpvote(models.Model):
 
 
 class AnswerUpvote(models.Model):
-    parent = models.ForeignKey(Answer, related_name="upvote", related_query_name="upvote_set")
+    parent = models.ForeignKey(Answer, related_name="upvote",
+                                related_query_name="upvote_set")
     voter = models.ForeignKey(User)
     posted_at = models.DateTimeField(auto_now=True)
 
 
 class AnswerDownvote(models.Model):
-    parent = models.ForeignKey(Answer, related_name="downvote")
+    parent = models.ForeignKey(Answer, related_name="downvote",
+                                related_query_name="downvote_set")
     voter = models.ForeignKey(User)
     posted_at = models.DateTimeField(auto_now=True)
