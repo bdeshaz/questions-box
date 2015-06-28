@@ -10,15 +10,27 @@
 
 <div class="row marketing">
 
-{% bootstrap_pagination page_obj %}
+    {% if is_paginated %}
+         {% bootstrap_pagination page_obj %}
+    {% endif %}
 
-<p>Stats on user:
+<p>{{ user.username }} Questions:
     <ul>
-        <li>Score: {{ user.score }}</li>
+    {% for question in questions %}
+        <li>{{ question.title }}</li>
+    {% endfor %}
     </ul>
 </p>
 
-
-{% bootstrap_pagination page_obj %}
+<p>{{ user.username }} Answers:
+    <ul>
+    {% for answer in answers %}
+        <li>{{ answer.parent.title }}</li>
+    {% endfor %}
+    </ul>
+</p>
+    {% if is_paginated %}
+         {% bootstrap_pagination page_obj %}
+    {% endif %}
 
 {% endblock %}
