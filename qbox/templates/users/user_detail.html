@@ -5,6 +5,7 @@
 
 <div class="jumbotron">
     <h1>{{ user.username }}</h1>
+    <h2><a href="{% url "edit_user" %}">Edit User</a></h2>
     <p class="lead">User of this site</p>
 </div>
 
@@ -17,7 +18,7 @@
 <p>{{ user.username }} Questions:
     <ul>
     {% for question in questions %}
-        <li>{{ question.title }}</li>
+        <li><a href="{% url "show_question" question.pk %}">{{ question.title }}</a></li>
     {% endfor %}
     </ul>
 </p>
