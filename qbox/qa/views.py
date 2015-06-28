@@ -8,11 +8,13 @@ from qa.models import Question, Answer, Tag, AnswerComment, QuestionComment, \
     AnswerCommentUpvote, QuestionCommentUpvote
 import qa.forms as QA_forms
 
-from django.views.generic import View, RedirectView, ListView
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
 
 # Begin question and answer vote redirects
+from registration.forms import RegistrationForm
+
+
 class QuestionUpvoteView(django_views.RedirectView):
     permanent = False
     query_string = True
