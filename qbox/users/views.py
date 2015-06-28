@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import generic
 from .forms import UserForm
+import operator
 
 
 class UserDetailView(generic.DetailView):
@@ -50,6 +51,8 @@ class UserListView(generic.ListView):
                 (usr.question_set.count() * 5) +
                 (usr.answerdownvote_set.count() * -1)
             )
+        context['users'] = sorted(context['users'],
+                    key=operator.attrgetter('print_score'), reverse=True)
         # for
         # context["score"] = (
         #     sum(num.score() for num in self.the_user.answer_set.all()) +
