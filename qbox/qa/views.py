@@ -150,13 +150,22 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
         self.question.set_show(self.request.user)
         context['question'] = self.question
+        context['question_comment'] = QA_forms.QuestionCommentForm()
         context['answer_form'] = QA_forms.AnswerForm()
         # question_comment_forms = []
         # for answer in self.question.answer_set:
         #     question_comment_forms.append(QA_forms.QuestionCommentForm())
         # form = MyForm(initial={'ids': [o.id for o in queryset]})
-        # context['answer_comment'] = QA_forms.AnswerCommentForm()
-        context['question_comment'] = QA_forms.QuestionCommentForm()
+
+        ac_list = []
+        for ans in self.question.answer_set.all():
+            xi = {}
+            xi['ans'] = ans
+            xi['form'] = QA_forms.AnswerCommentForm(initial=
+                            {'answer_id':ans.id,'text':""})
+            ac_list.append(xi)
+        context['answer_comments'] = ac_list
+        print(ac_list)
         # context['tag_form'] = QA_forms.TagForm()
         return context
 
@@ -179,8 +188,20 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
                 comment.save()
                 message_text = "Your comment has been added. Remember to be civil."
                 messages.add_message(self.request, messages.SUCCESS, message_text)
-            elif 'answer_comment' in self.request.POST:
-                pass
+            for ans in self.question.answer_set.all():
+                form_str = 'answer_comment'+str(ans.id)
+                answer_id = ans.id
+                if form_str in self.request.POST:
+                    answer_comment = QA_forms.AnswerCommentForm(self.request.POST)
+                    comment = answer_comment.save(commit=False)
+                    # answer_id = self.request.POST.get('answer_id')
+                    comment.parent = Answer.objects.get(pk=answer_id)
+                    comment.owner = user
+                    comment.save()
+                    message_text = "Your comment has been added on the answer '"
+                    message_text += comment.parent.text[:40]
+                    message_text += "'. Please be civil."
+                    messages.add_message(self.request, messages.SUCCESS, message_text)
         else:
             message_text = "Log in to post things."
             messages.add_message(self.request, messages.ERROR, message_text)
@@ -192,7 +213,6 @@ class AskQuestionView(django_views.edit.CreateView):  # or FormView
     template_name = "qa/ask.html"
     fields = ["title", "text"]
     success_url = 'ask_question'
-    # success_url = 'http://www.google.com'
 
     def form_valid(self, form):
         user = self.request.user

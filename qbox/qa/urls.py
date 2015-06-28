@@ -13,14 +13,18 @@ urlpatterns = [
     url(r'^ask/', views.AskQuestionView.as_view(), name='ask_question'),
     url(r'^q/(?P<pk>\d+)', views.QuestionDetailView.as_view(), name="show_question"),
     # Voting redirect views
+    url(r'^Qdownvote/(?P<pk>\d+)', views.QuestionDownvoteView.as_view(),
+                                        name='question_downvote'),
+    url(r'^QCupvote/(?P<pk>\d+)', views.QuestionCommentUpvoteView.as_view(),
+                                        name='question_comment_upvote'),
+    #   on answers
     url(r'^Aupvote/(?P<pk>\d+)', views.AnswerUpvoteView.as_view(),
                                         name='answer_upvote'),
     url(r'^Adownvote/(?P<pk>\d+)', views.AnswerDownvoteView.as_view(),
                                         name='answer_downvote'),
     url(r'^Qupvote/(?P<pk>\d+)', views.QuestionUpvoteView.as_view(),
                                         name='question_upvote'),
-    url(r'^Qdownvote/(?P<pk>\d+)', views.QuestionDownvoteView.as_view(),
-                                        name='question_downvote'),
-    url(r'^QCupvote/(?P<pk>\d+)', views.QuestionCommentUpvoteView.as_view(),
-                                        name='question_comment_upvote'),
+    url(r'^ACupvote/(?P<pk>\d+)', views.AnswerCommentUpvoteView.as_view(),
+                                        name='answer_comment_upvote'),
+
 ]

@@ -50,7 +50,6 @@
             {% bootstrap_form question_comment %}
         <input type="submit" name="question_comment" value="Comment on this question"/>
         </form>
-      </p>
      </div>
 </div>
 
@@ -75,7 +74,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for ans in question.answer_set.all %}
+{#		{% for ans in question.answer_set.all %} #}
+        {% for xi in answer_comments %}
+        {% with ans=xi.ans %}
+        {% with ac_form=xi.form %}
 		<tr>
 			<td>
                 <div style="
@@ -118,10 +120,18 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                <form method="POST" action="{% url 'show_question' question.id %}">
+                    {% csrf_token %}
+                    {% bootstrap_form ac_form %}
+                <input type="submit" name="answer_comment{{ ans.id }}" value="Comment on answer"/>
+                </form>
             </td>
 		</tr>
 
 
+        {% endwith %}
+        {% endwith %}
 		{% endfor %}
         </td>
 	</tbody>

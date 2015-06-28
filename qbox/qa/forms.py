@@ -21,9 +21,10 @@ class AnswerForm(forms.ModelForm):
         fields = ('text',)
 
 class AnswerCommentForm(forms.ModelForm):
+    answer_id = forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model = models.AnswerComment
-        fields = ('text',)
+        fields = ('text', 'answer_id', )
 
 class TagForm(forms.ModelForm):
     class Meta:
