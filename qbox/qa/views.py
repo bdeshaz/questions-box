@@ -49,9 +49,11 @@ class AnswerUpvoteView(django_views.RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'show_question'
+    q_id = None
 
     def dispatch(self, *args, **kwargs):
         answer = Answer.objects.get(pk=self.kwargs['pk'])
+        self.q_id = answer.parent.id
         voter = self.request.user
         if voter is not None and voter.is_authenticated():
             vote = AnswerUpvote(parent=answer, voter=voter)
@@ -60,15 +62,19 @@ class AnswerUpvoteView(django_views.RedirectView):
             messages.add_message(self.request, messages.SUCCESS, message_text)
         return super(AnswerUpvoteView, self).dispatch(*args, **kwargs)
 
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('show_question', kwargs={'pk':self.q_id})
 
 
 class AnswerDownvoteView(django_views.RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'show_question'
+    q_id = None
 
     def dispatch(self, *args, **kwargs):
         answer = Answer.objects.get(pk=self.kwargs['pk'])
+        self.q_id = answer.parent.id
         voter = self.request.user
         if voter is not None and voter.is_authenticated():
             vote = AnswerDownvote(parent=answer, voter=voter)
@@ -77,15 +83,20 @@ class AnswerDownvoteView(django_views.RedirectView):
             messages.add_message(self.request, messages.SUCCESS, message_text)
         return super(AnswerDownvoteView, self).dispatch(*args, **kwargs)
 
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('show_question', kwargs={'pk':self.q_id})
+
 # comment upvote redirects
 class QuestionCommentUpvoteView(django_views.RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'show_question'
+    q_id = None
 
     def dispatch(self, *args, **kwargs):
         comment = QuestionComment.objects.get(pk=kwargs['pk'])
         voter = self.request.user
+        self.q_id = comment.parent.id
         if voter is not None and voter.is_authenticated():
             vote = QuestionCommentUpvote(parent=comment, voter=voter)
             vote.save()
@@ -93,7 +104,31 @@ class QuestionCommentUpvoteView(django_views.RedirectView):
             messages.add_message(self.request, messages.SUCCESS, message_text)
         return super(QuestionCommentUpvoteView, self).dispatch(*args, **kwargs)
 
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('show_question', kwargs={'pk':self.q_id})
 
+
+class AnswerCommentUpvoteView(django_views.RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
+    q_id = None
+
+    def dispatch(self, *args, **kwargs):
+        comment = AnswerComment.objects.get(pk=kwargs['pk'])
+        self.q_id = comment.parent.parent.id
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = AnswerCommentUpvote(parent=comment, voter=voter)
+            vote.save()
+            message_text = "You have upvoted that (answer) comment."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        return super(AnswerCommentUpvoteView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('show_question', kwargs={'pk':self.q_id})
+
+# main view for question
 class QuestionDetailView(django_views.ListView):  # used to be ListView
     template_name = 'qa/question.html'
     model = Answer

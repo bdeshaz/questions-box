@@ -69,19 +69,61 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Score</th>
-			<th>Answer</th>
+			<th>Vote Balance</th>
+			<th>Answer \<br />
+                Comments</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for ans in question.answer_set.all %}
 		<tr>
-			<td>{{ ans.balance }}</td>
+			<td>
+                <div style="
+                    border-radius: 50%; width: 50px; height: 60px; padding: 8px;
+                    background: #ddf; border: 2px solid black; color: black;
+                    text-align: center; font: 32px Arial, sans-serif;
+                    display: inline-block;">
+                {{ ans.balance }}
+                </div>
+                {% if ans.show %}
+                <a href="{% url 'answer_upvote' ans.id %}">
+                    <span class="glyphicon glyphicon-chevron-up"></span></a>
+                <a href="{% url 'answer_downvote' ans.id %}">
+                    <span class="glyphicon glyphicon-chevron-down"></span></a>
+                {% endif %}
+
+            </td>
 			<td>{{ ans.text }} <br />
-                {{ ans.user.username }}
+                <p class="pull-right">
+                    <a href="{% url 'view_user' ans.owner.id %}">
+                    {{ ans.owner.username }}</a></p>
+                <hr />
+
+                {% for comment in ans.comment.all %}
+                <div class="row marketing">
+                    <div class="col-md-2">
+                        {{ comment.balance }}
+                        {% if comment.show %}
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="{% url 'answer_comment_upvote' comment.id %}">
+                            <span class="glyphicon glyphicon-thumbs-up"></span></a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        {{ comment.text }}
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{% url 'view_user' comment.owner.id %}">
+                            {{ comment.owner }}</a>
+                    </div>
+                </div>
+                {% endfor %}
             </td>
 		</tr>
+
+
 		{% endfor %}
+        </td>
 	</tbody>
 </table>
 </div>
