@@ -15,18 +15,20 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Score</th>
+			<th>Vote Balance</th>
 			<th>Answers</th>
 			<th>Question</th>
+            <th>Asker</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for qu in questions %}
 		<tr>
-			<td>{{ qu.score }}</td>
-			<td>{{ qu.answer_count }}</td>
+			<td>{{ qu.balance }}</td>
+			<td>{{ qu.answer_set.count }}</td>
 			<td><a href="{% url 'show_question' qu.id %}">
 				{{ qu.title }}</a></td>
+            <td><a href="{% url 'view_user' qu.owner.id %}">{{ qu.owner.username }}</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

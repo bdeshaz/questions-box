@@ -26,32 +26,56 @@ class QuestionUpvoteView(django_views.RedirectView):
             vote.save()
             message_text = "You have upvoted this question."
             messages.add_message(self.request, messages.SUCCESS, message_text)
-        # return redirect("/q/"+str(self.kwargs['pk']))
         return super(QuestionUpvoteView, self).dispatch(*args, **kwargs)
 
-    def get_redirect_url(self, *args, **kwargs):
-        # return render(self.request, "question.html")
-        # return reverse('show_question', self.q_id)
-        # return redirect("/q/"+str(self.q_id))
-        # return redirect('show_question', self.answer.parent.id)
-        return super(QuestionUpvoteView, self).get_redirect_url(*args, **kwargs)
+
+class QuestionDownvoteView(django_views.RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
+
+    def dispatch(self, *args, **kwargs):
+        question = Question.objects.get(pk=kwargs['pk'])
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = QuestionDownvote(parent=question, voter=voter)
+            vote.save()
+            message_text = "You have downvoted this question."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        return super(QuestionDownvoteView, self).dispatch(*args, **kwargs)
 
 
 class AnswerUpvoteView(django_views.RedirectView):
-    permanent = True
-    answer = None
-    voter = None
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
 
     def dispatch(self, *args, **kwargs):
-        self.answer = Answer.objects.get(pk=self.kwargs['pk'])
-        self.voter = request.user
-        vote = AnswerUpvote(parent=self.answer, voter=self.voter)
-        vote.save()
+        answer = Answer.objects.get(pk=self.kwargs['pk'])
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = AnswerUpvote(parent=answer, voter=voter)
+            vote.save()
+            message_text = "You have upvoted that answer."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
         return super(AnswerUpvoteView, self).dispatch(*args, **kwargs)
 
-    def get_redirect_url(self, *args, **kwargs):
-        # return render(self.request, "question.html")
-        return redirect('show_question', self.answer.parent.id)
+
+
+class AnswerDownvoteView(django_views.RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'show_question'
+
+    def dispatch(self, *args, **kwargs):
+        answer = Answer.objects.get(pk=self.kwargs['pk'])
+        voter = self.request.user
+        if voter is not None and voter.is_authenticated():
+            vote = AnswerDownvote(parent=answer, voter=voter)
+            vote.save()
+            message_text = "You have downvoted that answer."
+            messages.add_message(self.request, messages.SUCCESS, message_text)
+        return super(AnswerDownvoteView, self).dispatch(*args, **kwargs)
 
 
 class QuestionDetailView(django_views.ListView):  # used to be ListView
@@ -73,6 +97,7 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
 
     def get_context_data(self, **kwargs):
         context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        self.question.set_show(self.request.user)
         context['question'] = self.question
         context['answer_form'] = QA_forms.AnswerForm()
         # question_comment_forms = []
@@ -86,12 +111,15 @@ class QuestionDetailView(django_views.ListView):  # used to be ListView
 
     def post(self, *args, **kwargs):
         user = self.request.user
-        print(self.request.POST)
         if user is not None and user.is_authenticated():
             if 'answer_form' in self.request.POST:
                 answer_form = QA_forms.AnswerForm(self.request.POST)
-                answer = answer_form.save()
-                request.POST.getlist('ids')
+                answer = answer_form.save(commit=False)
+                answer.owner = user
+                answer.parent = self.question
+                answer.save()
+                message_text = "Your answer has been added. Thanks for contributing."
+                messages.add_message(self.request, messages.SUCCESS, message_text)
             elif 'question_comment' in self.request.POST:
                 question_comment = QA_forms.QuestionCommentForm(self.request.POST)
                 comment = question_comment.save(commit=False)
